@@ -1,6 +1,7 @@
 import { Workbox } from 'workbox-window';
 import Editor from './editor';
 import './database';
+// import { initDB, getDb, putDb } from './database';
 import '../css/style.css';
 
 import Logo from "../images/logo.png";
