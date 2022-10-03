@@ -1,5 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const WebpackPwaManifest = require('webpack-pwa-manifest');
+const WebpackPwaManifest = require('webpack-pwa-manifest');
 const path = require('path');
 const { InjectManifest } = require('workbox-webpack-plugin');
 
@@ -15,7 +15,7 @@ module.exports = () => {
       // install: './src/js/install.js'
     },
     output: {
-      filename: 'bundle.js',
+      filename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
     },
 
@@ -41,42 +41,45 @@ module.exports = () => {
             }
           }
         }
-
       ],
     },
     plugins: [
-      // new WebpackPwaManifest({
-      //   name: 'My Progressive Web App',
-      //   short_name: 'MyPWA',
-      //   description: 'My awesome Progressive Web App!',
-      //   background_color: '#ffffff',
-      //   fingerprints: false,
-      //   inject: true,
-      //   crossorigin: 'use-credentials', //can be null, use-credentials or anonymous
-      //   icons: [
-      //     {
-      //       src: path.resolve('src/assets/icon.png'),
-      //       sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
-      //     },
-      //     {
-      //       src: path.resolve('src/assets/large-icon.png'),
-      //       size: '1024x1024' // you can also use the specifications pattern
-      //     },
-      //     {
-      //       src: path.resolve('src/assets/maskable-icon.png'),
-      //       size: '1024x1024',
-      //       purpose: 'maskable'
-      //     }
-      //   ]
-      // }),
+      new HtmlWebpackPlugin({
+        template: './index.html',
+        title: 'MyPWA',
+      }),
       new InjectManifest({
         swSrc: './src-sw.js',
         swDest: './service-worker.js'
       }),
-      new HtmlWebpackPlugin({
-      template: './index.html',
-      title: 'Webpack Plugin',
-    }),
+      new WebpackPwaManifest({
+        name: 'My Progressive Web App',
+        short_name: 'MyPWA',
+        description: 'My awesome Progressive Web App!',
+        background_color: '#ffffff',
+        start_url: './',
+        publicPath: './',
+        fingerprints: false,
+        inject: true,
+        crossorigin: 'use-credentials', //can be null, use-credentials or anonymous
+        icons: [
+              {
+                src: path.resolve('src/images/logo.png'),
+                sizes: [96, 128, 192, 256, 384, 512], // multiple sizes
+                destination: path.join('assets', 'icons'),
+              },
+              // {
+              //   src: path.resolve('src/assets/large-logo.png'),
+              //   size: '1024x1024', // you can also use the specifications pattern
+              // },
+              {
+                src: path.resolve('src/images/logo.png'),
+                size: '1024x1024',
+                destination: path.join('assets', 'icons'),
+                purpose: 'maskable'
+              }
+        ]
+      }),
     ],
   };
 };
